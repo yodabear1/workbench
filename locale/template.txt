@@ -6,20 +6,6 @@
 Work Bench=
 Hammer=
 
-# Crafting types
-Nanoslab=
-Micropanel=
-Microslab=
-Thinstair=
-Cube=
-Panel=
-Slab=
-Doublepanel=
-Halfstair=
-Outerstair=
-Stair=
-Innerstair=
-
 # Buttons
 < Back=
 Crafting=
