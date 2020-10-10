@@ -1,0 +1,29 @@
+# textdomain: workbench
+#
+#
+
+# Object Names
+Work Bench=Werkbank
+Hammer=Hämmerchen
+
+# Crafting types
+#Nanoslab=
+#Micropanel=
+#Microslab=
+#Thinstair=
+#Cube=
+#Panel=
+#Slab=
+#Doublepanel=
+#Halfstair=
+#Outerstair=
+#Stair=
+#Innerstair=
+
+# Buttons
+< Back=Zurück
+Crafting=Fertigung
+Storage=Aufbewahrung
+Cut=Zuschneiden
+Repair=Reparieren
+
