@@ -1,3 +1,6 @@
+
+local S = minetest.get_translator("workbench")
+
 local workbench = {}
 WB = {}
 screwdriver = screwdriver or {}
@@ -107,12 +110,12 @@ end
 
 local formspecs = {
 	-- Main formspec
-	[[ label[0.9,1.23;Cut]
-	   label[0.9,2.23;Repair]
+	[[ label[0.9,1.23;S("Cut")]
+	   label[0.9,2.23;S("Repair")]
 	   box[-0.05,1;2.05,0.9;#555555]
 	   box[-0.05,2;2.05,0.9;#555555]
-	   button[0,0;2,1;craft;Crafting]
-	   button[2,0;2,1;storage;Storage]
+	   button[0,0;2,1;craft;S("Crafting")]
+	   button[2,0;2,1;storage;S("Storage")]
 	   image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 	   image[0,1;1,1;workbench_saw.png]
 	   image[0,2;1,1;workbench_anvil.png]
@@ -123,14 +126,14 @@ local formspecs = {
 	   list[context;forms;4,0;4,3;] ]],
 	-- Crafting formspec
 	[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-	   button[0,0;1.5,1;back;< Back]
+	   button[0,0;1.5,1;back;S("< Back")]
 	   list[current_player;craft;2,0;3,3;]
 	   list[current_player;craftpreview;6,1;1,1;]
 	   listring[current_player;main]
 	   listring[current_player;craft] ]],
 	-- Storage formspec
 	[[ list[context;storage;0,1;8,2;]
-	   button[0,0;1.5,1;back;< Back]
+	   button[0,0;1.5,1;back;S("< Back")]
 	   listring[context;storage]
 	   listring[current_player;main] ]]
 }
@@ -151,7 +154,7 @@ function workbench.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 
-	meta:set_string("infotext", "Work Bench")
+	meta:set_string("infotext", S("Work Bench"))
 	workbench:set_formspec(meta, 1)
 end
 
@@ -243,7 +246,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 end
 
 minetest.register_node(":xdecor:workbench", {
-	description = "Work Bench",
+	description = S("Work Bench"),
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {cracky=2, choppy=2, oddly_breakable_by_hand=1},
@@ -263,7 +266,7 @@ minetest.register_node(":xdecor:workbench", {
 })
 
 minetest.register_tool(":xdecor:hammer", {
-	description = "Hammer",
+	description = S("Hammer"),
 	inventory_image = "xdecor_hammer.png",
 	wield_image = "xdecor_hammer.png",
 	on_use = function() do return end end
@@ -313,12 +316,13 @@ for i=1, #nodes do
 
 		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
 			stairs.register_stair_and_slab(node:match(":(.*)"), node,
-				groups, tiles, def.description.." Stair",
-				def.description.." Slab", def.sounds)
+				groups, tiles, def.description.." "..S("Stair"),
+				def.description.." "..S("Slab"), def.sounds)
 		end
 
-		minetest.register_node(":"..node.."_"..d[1], {
-			description = def.description.." "..d[1]:gsub("^%l", string.upper),
+gok		minetest.register_node(":"..node.."_"..d[1], {
+			local cuttype=d[1]:gsub("^%l", string.upper)
+			description = def.description.." "..S(cuttype),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
