@@ -320,7 +320,7 @@ for i=1, #nodes do
 				def.description.." "..S("Slab"), def.sounds)
 		end
 
-gok		minetest.register_node(":"..node.."_"..d[1], {
+		minetest.register_node(":"..node.."_"..d[1], {
 			local cuttype=d[1]:gsub("^%l", string.upper)
 			description = def.description.." "..S(cuttype),
 			paramtype = "light",
