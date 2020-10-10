@@ -47,6 +47,7 @@ setmetatable(nodes, {
 
 nodes = nodes..WB.custom_nodes_register
 
+
 -- Nodeboxes definitions
 workbench.defs = {
 	-- Name       Yield   X  Y   Z  W   H  L
@@ -164,7 +165,6 @@ end
 
 function workbench.fields(pos, _, fields)
 	local meta = minetest.get_meta(pos)
-
 	if     fields.back    then workbench:set_formspecmain(meta)
 	elseif fields.craft   then workbench:set_formspeccrafting(meta)
 	elseif fields.storage then workbench:set_formspecstorage(meta) end
@@ -321,13 +321,12 @@ for i=1, #nodes do
 
 		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
 			stairs.register_stair_and_slab(node:match(":(.*)"), node,
-				groups, tiles, def.description.." "..S("Stair"),
-				def.description.." "..S("Slab"), def.sounds)
+				groups, tiles, def.description.." Stair",
+				def.description.." Slab", def.sounds)
 		end
 
-		local cuttype=d[1]:gsub("^%l", string.upper)
 		minetest.register_node(":"..node.."_"..d[1], {
-			description = def.description.." "..S(cuttype),
+			description = def.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
