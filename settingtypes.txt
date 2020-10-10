@@ -1,0 +1,7 @@
+# could be expanded to scythe, helmet,... (you name it)
+repairable_Objects (List Tools to be repairable) string "pick", "axe", "shovel", "sword", "hoe", "armor", "shield"
+
+# tool repair ammount, hamme wear ammount
+tool_repair_amount (units to repair your tools) int 500 100 1000
+hammer_wear (ammount of extra wear for the hammer, so hammer looses 'tool_repair_ammount'+ hammer_wear) int 200 0 1000
+tool_repair_cycle (Time to repair 'tool_repair_ammount' damage) float 3 0.7 10.0
