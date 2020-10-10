@@ -108,40 +108,44 @@ function workbench:pixelbox(size, boxes)
 	return {type="fixed", fixed=fixed}
 end
 
-local formspecs = {
-	-- Main formspec
-	[[ label[0.9,1.23;S("Cut")]
-	   label[0.9,2.23;S("Repair")]
-	   box[-0.05,1;2.05,0.9;#555555]
-	   box[-0.05,2;2.05,0.9;#555555]
-	   button[0,0;2,1;craft;S("Crafting")]
-	   button[2,0;2,1;storage;S("Storage")]
-	   image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-	   image[0,1;1,1;workbench_saw.png]
-	   image[0,2;1,1;workbench_anvil.png]
-	   image[3,2;1,1;hammer_layout.png]
-	   list[context;input;2,1;1,1;]
-	   list[context;tool;2,2;1,1;]
-	   list[context;hammer;3,2;1,1;]
-	   list[context;forms;4,0;4,3;] ]],
-	-- Crafting formspec
-	[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-	   button[0,0;1.5,1;back;S("< Back")]
-	   list[current_player;craft;2,0;3,3;]
-	   list[current_player;craftpreview;6,1;1,1;]
-	   listring[current_player;main]
-	   listring[current_player;craft] ]],
-	-- Storage formspec
-	[[ list[context;storage;0,1;8,2;]
-	   button[0,0;1.5,1;back;S("< Back")]
-	   listring[context;storage]
-	   listring[current_player;main] ]]
-}
-
-function workbench:set_formspec(meta, id)
+function workbench:set_formspecmain(meta)
 	meta:set_string("formspec", "size[8,7;]list[current_player;main;0,3.25;8,4;]"..
-			formspecs[id]..default.gui_bg..default.gui_bg_img..
-			default.gui_slots..default.get_hotbar_bg(0,3.25))
+			"label[0.9,1.23;"..S("Cut").."]"..
+	   		"label[0.9,2.23;"..S("Repair").."]"..
+	   		"box[-0.05,1;2.05,0.9;#555555]"..
+	   		"box[-0.05,2;2.05,0.9;#555555]"..
+	   		"button[0,0;2,1;craft;"..S("Crafting").."]"..
+	   		"button[2,0;2,1;storage;"..S("Storage").."]"..
+	   		"image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+	   		"image[0,1;1,1;workbench_saw.png]"..
+	   		"image[0,2;1,1;workbench_anvil.png]"..
+	   		"image[3,2;1,1;hammer_layout.png]"..
+	   		"list[context;input;2,1;1,1;]"..
+	   		"list[context;tool;2,2;1,1;]"..
+	   		"list[context;hammer;3,2;1,1;]"..
+	   		"list[context;forms;4,0;4,3;]"..
+			default.gui_bg..default.gui_bg_img..
+			default.gui_slots..default.get_hotbar_bg(0,3.25));
+end
+function workbench:set_formspeccrafting(meta)
+	meta:set_string("formspec", "size[8,7;]list[current_player;main;0,3.25;8,4;]"..
+			"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+	   		"button[0,0;1.5,1;back;"..S("< Back").."]"..
+	   		"list[current_player;craft;2,0;3,3;]"..
+	   		"list[current_player;craftpreview;6,1;1,1;]"..
+	   		"listring[current_player;main]"..
+	   		"listring[current_player;craft]"..
+			default.gui_bg..default.gui_bg_img..
+			default.gui_slots..default.get_hotbar_bg(0,3.25));
+end
+function workbench:set_formspecstorage(meta)
+	meta:set_string("formspec", "size[8,7;]list[current_player;main;0,3.25;8,4;]"..
+			"list[context;storage;0,1;8,2;]"..
+	   		"button[0,0;1.5,1;back;"..S("< Back").."]"..
+	   		"listring[context;storage]"..
+	   		"listring[current_player;main]"..
+			default.gui_bg..default.gui_bg_img..
+			default.gui_slots..default.get_hotbar_bg(0,3.25));
 end
 
 function workbench.construct(pos)
@@ -155,14 +159,15 @@ function workbench.construct(pos)
 	inv:set_size("storage", 8*2)
 
 	meta:set_string("infotext", S("Work Bench"))
-	workbench:set_formspec(meta, 1)
+	workbench:set_formspecmain(meta)
 end
 
 function workbench.fields(pos, _, fields)
 	local meta = minetest.get_meta(pos)
-	if     fields.back    then workbench:set_formspec(meta, 1)
-	elseif fields.craft   then workbench:set_formspec(meta, 2)
-	elseif fields.storage then workbench:set_formspec(meta, 3) end
+
+	if     fields.back    then workbench:set_formspecmain(meta)
+	elseif fields.craft   then workbench:set_formspeccrafting(meta)
+	elseif fields.storage then workbench:set_formspecstorage(meta) end
 end
 
 function workbench.dig(pos)
@@ -320,8 +325,8 @@ for i=1, #nodes do
 				def.description.." "..S("Slab"), def.sounds)
 		end
 
+		local cuttype=d[1]:gsub("^%l", string.upper)
 		minetest.register_node(":"..node.."_"..d[1], {
-			local cuttype=d[1]:gsub("^%l", string.upper)
 			description = def.description.." "..S(cuttype),
 			paramtype = "light",
 			paramtype2 = "facedir",
@@ -337,4 +342,3 @@ for i=1, #nodes do
 	end
 end
 end
-
