@@ -1,0 +1,28 @@
+# textdomain: workbench
+#
+#
+
+# Object Names
+Work Bench=
+Hammer=
+
+# Crafting types
+Nanoslab=
+Micropanel=
+Microslab=
+Thinstair=
+Cube=
+Panel=
+Slab=
+Doublepanel=
+Halfstair=
+Outerstair=
+Stair=
+Innerstair=
+
+# Buttons
+< Back=
+Crafting=
+Storage=
+Cut=
+Repair=
