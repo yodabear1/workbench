@@ -3,6 +3,25 @@ WB = {}
 screwdriver = screwdriver or {}
 local min, ceil = math.min, math.ceil
 
+-- Settings from settingtypes.txt
+local repairable_tools = minetest.settings:get("repairable_Objects")
+if repairable_tools == nil then
+	repairable_tools = "pick, axe, shovel, sword, hoe, armor, shield"
+end
+repairable_tools = repairable_tools:gsub("%s+", "")
+local tool_wear = minetest.settings:get("tool_repair_amount")
+if tool_wear == nil then
+	tool_wear = 500
+end
+local hammer_malus = minetest.settings:get("hammer_wear")
+if hammer_malus == nil then
+	hammer_malus = 200
+end
+local repair_intervall = minetest.settings:get("tool_repair_cycle")
+if repair_intervall == nil then
+	repair_intervall = 3.0
+end
+
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
@@ -67,9 +86,18 @@ workbench.defs = {
 			    { 0, 8,  0, 8,  8, 8  }}
 }
 
+
+function workbench:split(s, delimiter)
+    local result = {};
+    for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match);
+    end
+    return result;
+end
+
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
-	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
+	local tools = workbench:split(repairable_tools, ",")
 	for _, t in pairs(tools) do
 		if stack:find(t) then return true end
 	end
@@ -180,8 +208,8 @@ function workbench.timer(pos)
 	end
 
 	-- Tool's wearing range: 0-65535 | 0 = new condition
-	tool:add_wear(-500)
-	hammer:add_wear(700)
+	tool:add_wear(0 - tool_wear)
+	hammer:add_wear(tool_wear + hammer_malus)
 
 	inv:set_stack("tool", 1, tool)
 	inv:set_stack("hammer", 1, hammer)
@@ -211,7 +239,7 @@ function workbench.on_put(pos, listname, _, stack)
 		workbench:get_output(inv, input, stack:get_name())
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
-		timer:start(3.0)
+		timer:start(repair_intervall)
 	end
 end
 
@@ -333,4 +361,3 @@ for i=1, #nodes do
 	end
 end
 end
-
